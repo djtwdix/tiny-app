@@ -5,7 +5,7 @@ const PORT = 8080;
 
 const generateRandomString = () => {
   let randomString = ""
-  let alphaNum = '123456789abcdefghijklmnopqrstuvwxyz'
+  let alphaNum = '123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
   for (let i = 0; i < 6; i++) {
   	randomString += alphaNum[Math.round(Math.random() * (alphaNum.length - 1))];
   }
