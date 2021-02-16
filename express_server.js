@@ -2,6 +2,7 @@
 
 const express = require('express');
 const app = express();
+var cookieParser = require('cookie-parser');
 
 //Parse incoming request bodies in a middleware before your handlers, available under the req.body property.
 const bodyParser = require("body-parser");
@@ -22,6 +23,8 @@ const urlDatabase = {
 //Use bodyParser
 app.use(bodyParser.urlencoded({extended: true}))
 
+app.use(cookieParser())
+
 //Sets view engine to ejs
 app.set('view engine', 'ejs');
 
@@ -33,20 +36,21 @@ app.get("/urls.json", (req,res) => {
 //My urls page, renders urls_index with urlDatabase as the 
 //variable to populate the list
 app.get("/urls", (req,res) => {
-  const templateVars = {urls: urlDatabase};
+  console.log(req.cookies)
+  const templateVars = {urls: urlDatabase, username: req.cookies["username"]};
   res.render("urls_index", templateVars);
 })
 
 //Create new URL page, renders urls_new and has form to input longURL
 app.get("/urls_new", (req,res) => {
-  res.render("urls_new");
+  const templateVars = {username: req.cookies["username"]}
+  res.render("urls_new", templateVars);
 })
 
 //new route is created with shortURL path, renders urls_show
 //displays longURL and shortURl (is link to longURL)
 app.get("/urls/:shortURL", (req,res) => {
-  const templateVars = {shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL]}
-  console.log(req.params);
+  const templateVars = {shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL], username: req.cookies["username"]}
   res.render("urls_show", templateVars);
 })
 
@@ -71,8 +75,17 @@ app.post("/urls/:shortURL", (req,res) => {
   res.redirect(`/urls/${shortURL}`);
 })
 
+app.post("/login", (req,res) => {
+  res.cookie("username", req.body.username)
+  res.redirect("/urls")
+})
+
+app.post("/logout", (req,res) => {
+  res.clearCookie("username");
+  res.redirect("/urls")
+})
+
 app.post("/urls/:shortURL/delete", (req, res) => {
-  console.log(req.params.shortURL)
   delete urlDatabase[req.params.shortURL];
   res.redirect('/urls')
 })
