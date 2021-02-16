@@ -1,57 +1,75 @@
+//require express
+
 const express = require('express');
 const app = express();
+
+//Parse incoming request bodies in a middleware before your handlers, available under the req.body property.
 const bodyParser = require("body-parser");
 const PORT = 8080;
 
+//Generate random string
 const generateRandomString = () => {
   let randomString = ""
-  let alphaNum = '123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ'
+  let alphaNum = '123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
   for (let i = 0; i < 6; i++) {
   	randomString += alphaNum[Math.round(Math.random() * (alphaNum.length - 1))];
   }
   return randomString;
 }
 
-
-app.use(bodyParser.urlencoded({extended: true}))
-
-app.set('view engine', 'ejs');
-
+//mock database
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
 
+//Use bodyParser
+app.use(bodyParser.urlencoded({extended: true}))
+
+//Sets view engine to ejs
+app.set('view engine', 'ejs');
+
+//Mock database lives at /urls.json
 app.get("/urls.json", (req,res) => {
   res.json(urlDatabase);
 });
 
+//My urls page, renders urls_index with urlDatabase as the 
+//variable to populate the list
 app.get("/urls", (req,res) => {
   const templateVars = {urls: urlDatabase};
   res.render("urls_index", templateVars);
 })
 
+//Create new URL page, renders urls_new and has form to input longURL
 app.get("/urls_new", (req,res) => {
   res.render("urls_new");
 })
 
+//new route is created with shortURL path, renders urls_show
+//displays longURL and shortURl (is link to longURL)
 app.get("/urls/:shortURL", (req,res) => {
   const templateVars = {shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL]}
   console.log(req.params);
   res.render("urls_show", templateVars);
 })
 
+//New route with /u/shortURL as path redirects to longURL
+app.get("/u/:shortURL", (req,res) => {
+  const longURL = urlDatabase[req.params.shortURL];
+  res.redirect(longURL)
+})
+
+//Takes input from form and generates shortURL
+//Saves shortURL : longURL to database object
+//redirects to new shortURL path which renders urls_show
 app.post("/urls", (req,res) => {
   const shortURL = generateRandomString()
   urlDatabase[shortURL] = req.body.longURL;
-  
   res.redirect(`/urls/${shortURL}`);
 })
 
-/* app.get("/hello", (req,res) => {
-  res.send("<html><body>Hello<b>World</b></body></html>\n");
-}); */
-
+//Server listening on PORT
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}`)
 })
