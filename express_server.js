@@ -9,11 +9,7 @@ const PORT = 8080;
 
 //Generate random string
 const generateRandomString = () => {
-  let randomString = ""
-  let alphaNum = '123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
-  for (let i = 0; i < 6; i++) {
-  	randomString += alphaNum[Math.round(Math.random() * (alphaNum.length - 1))];
-  }
+  let randomString = Math.random().toString(36).substring(7);
   return randomString;
 }
 
@@ -67,6 +63,12 @@ app.post("/urls", (req,res) => {
   const shortURL = generateRandomString()
   urlDatabase[shortURL] = req.body.longURL;
   res.redirect(`/urls/${shortURL}`);
+})
+
+app.post("/urls/:shortURL/delete", (req, res) => {
+  console.log(req.params.shortURL)
+  delete urlDatabase[req.params.shortURL];
+  res.redirect('/urls')
 })
 
 //Server listening on PORT
