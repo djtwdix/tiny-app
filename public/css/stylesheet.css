@@ -1,0 +1,80 @@
+body {
+  margin: 0;
+  font-family: 'Fjalla One', sans-serif;
+  font-size: 30px;
+  background-color: #F3DFBF;
+}
+.container {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  border-radius: 5px;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  border: 1px solid black;
+
+}
+.welcome {
+  display: flex;
+  padding-left: 10px;
+  padding-right: 10px;
+  background-color: #07004d;
+  color: #F3DFBF;
+  justify-content: center;
+  text-align: center;
+  height: 400px;
+  width: 560px;
+  border-radius: 5px;
+  align-items: center;
+}
+
+.sign-in-form {
+  padding-top: 20px;
+  display: flex;
+  flex-direction: column;
+  background-color: #2d82b7;
+  height: 400px;
+  width: 500px;
+  border-radius: 5px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+input {
+  border: 1px solid #07004d;
+  border-radius: 5px;
+  font-size: 30px;
+  font-family: 'Fjalla One', sans-serif;
+  color: #07004d;
+  padding: 5px;
+  padding-left: 10px;
+  margin-bottom: 25px;
+}
+
+input:hover {
+  border: 1px solid #eb8a90;
+}
+
+input:active {
+  border: 1px solid #eb8a90;
+}
+
+button {
+  padding: 5px;
+  border: 0px solid #F3DFBF;
+  font-size: 30px;                            
+  font-family: 'Fjalla One', sans-serif;
+  background-color: #07004d;
+  color: #F3DFBF;
+  border-radius: 5px;
+}
+
+button:active {
+  background-color:#07004d;
+  border: 2px solid #eb8a90;
+  color: #eb8a90;
+  transform: translateY(2px);
+}
+

@@ -20,10 +20,16 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+const userDatabase = {
+  "djtwdix": "Ymmfltdix9",
+}
+
 //Use bodyParser
 app.use(bodyParser.urlencoded({extended: true}))
 
 app.use(cookieParser())
+
+app.use(express.static("public"));
 
 //Sets view engine to ejs
 app.set('view engine', 'ejs');
@@ -32,6 +38,10 @@ app.set('view engine', 'ejs');
 app.get("/urls.json", (req,res) => {
   res.json(urlDatabase);
 });
+
+app.get("/landing", (req,res) => {
+  res.render("landing-page")
+})
 
 //My urls page, renders urls_index with urlDatabase as the 
 //variable to populate the list
