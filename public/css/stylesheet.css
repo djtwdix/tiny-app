@@ -17,11 +17,13 @@ body {
 }
 .welcome {
   display: flex;
+  flex-direction: column;
   padding-left: 10px;
   padding-right: 10px;
   background-color: #07004d;
   color: #F3DFBF;
   justify-content: center;
+  align-content: center;
   text-align: center;
   height: 400px;
   width: 560px;
@@ -61,6 +63,14 @@ input:active {
   border: 1px solid #eb8a90;
 }
 
+a {
+  text-decoration: none;
+}
+
+a:visited {
+  color: #07004d;
+}
+
 button {
   padding: 5px;
   border: 0px solid #F3DFBF;
@@ -76,5 +86,21 @@ button:active {
   border: 2px solid #eb8a90;
   color: #eb8a90;
   transform: translateY(2px);
+}
+
+/* .coral-text {
+  color: #eb8a90;
+}
+ */
+@media screen and (max-width: 1083px) {
+  .welcome {
+    height: 100px;
+    width: 500px;
+  }
+}
+@media screen and (max-width: 507px) {
+  .welcome {
+    font-size: 20px;
+  }
 }
 
