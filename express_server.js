@@ -1,5 +1,6 @@
 //require express
 const { getUserIdByEmail } = require("./helpers/auth")
+const { getURLSByID } = require("./helpers/permissions")
 const express = require('express');
 const app = express();
 var cookieParser = require('cookie-parser');
@@ -16,16 +17,11 @@ const generateRandomString = () => {
 
 //mock database
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+
 };
 
 const userDatabase = {
-  "h49hf7": {
-    "id": "h49hf7",
-    "email": "example@example.com",
-    "password": "examplepassword9",
-  }
+
 }
 
 //Use bodyParser
@@ -59,29 +55,39 @@ app.get("/login", (req,res) => {
 //My urls page, renders urls_index with urlDatabase as the 
 //variable to populate the list
 app.get("/urls", (req, res) => {
-  const userInfo = userDatabase[req.cookies["user_id"]]
-  const templateVars = { urls: urlDatabase, user: userInfo };
+  const userInfo = userDatabase[req.cookies["user_id"]];
+  const userID = req.cookies["user_id"];
+  const usersURLS = getURLSByID(urlDatabase, userID)
+  console.log("getURlsbyID: ", getURLSByID(urlDatabase, userID))
+  console.log(urlDatabase);
+  const templateVars = { urls: usersURLS, user: userInfo };
+  console.log("url index template vars: ", templateVars)
   res.render("urls_index", templateVars);
 })
 
 //Create new URL page, renders urls_new and has form to input longURL
 app.get("/urls_new", (req, res) => {
-  const userInfo = userDatabase[req.cookies["user_id"]]
-  const templateVars = { user: userInfo}
+  const userInfo = userDatabase[req.cookies["user_id"]];
+  const templateVars = { user: userInfo};
   res.render("urls_new", templateVars);
 })
 
 //new route is created with shortURL path, renders urls_show
 //displays longURL and shortURl (is link to longURL)
 app.get("/urls/:shortURL", (req, res) => {
-  const userInfo = userDatabase[req.cookies["user_id"]]
-  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL], user: userInfo  }
+  const userID = req.cookies["user_id"]
+  const shortURL = req.params.shortURL
+  const userInfo = userDatabase[userID]
+  const templateVars = { shortURL: shortURL, longURL: urlDatabase[shortURL]["longURL"], urlID: urlDatabase[shortURL]["userID"], user: userInfo  }
+  console.log("new url template vars: ", templateVars)
+  console.log("tempVars shortURL: ", templateVars["shortURL"]);
   res.render("urls_show", templateVars);
 })
 
 //New route with /u/shortURL as path redirects to longURL
 app.get("/u/:shortURL", (req, res) => {
-  const longURL = urlDatabase[req.params.shortURL];
+  const longURL = urlDatabase[req.params.shortURL]["longURL"];
+  console.log("LongURL: ", longURL)
   res.redirect(longURL)
 })
 
@@ -90,13 +96,24 @@ app.get("/u/:shortURL", (req, res) => {
 //redirects to new shortURL path which renders urls_show
 app.post("/urls", (req, res) => {
   const shortURL = generateRandomString()
-  urlDatabase[shortURL] = req.body.longURL;
+  const id = req.cookies["user_id"];
+  urlDatabase[shortURL] = {
+    "longURL": req.body.longURL,
+    "userID": id
+  }
+  console.log("urls post:", urlDatabase)
   res.redirect(`/urls/${shortURL}`);
 })
 
 app.post("/urls/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL;
-  urlDatabase[shortURL] = req.body.updatedLongURL;
+  const id = req.cookies["user_id"]
+  const usersURLs = getURLSByID(urlDatabase, id);
+  if (usersURLs[shortURL]) {
+    urlDatabase[shortURL] = {
+      "longURL": req.body.updatedLongURL,
+    }
+  }
   res.redirect(`/urls/${shortURL}`);
 })
 
@@ -117,7 +134,12 @@ app.post("/logout", (req, res) => {
 })
 
 app.post("/urls/:shortURL/delete", (req, res) => {
-  delete urlDatabase[req.params.shortURL];
+  const id = req.cookies["user_id"]
+  const usersURLs = getURLSByID(urlDatabase, id);
+  console.log("usersURLS: ", usersURLs);
+  if (usersURLs[req.params.shortURL]) {
+    delete urlDatabase[req.params.shortURL];
+  }
   res.redirect('/urls')
 })
 

@@ -6,34 +6,37 @@
 <body>
   <%- include('partials/_navbar') %>
   <main>
-    <div class="title">
-      <h3>My URLs</h3>
-
-    </div>
-    <table class="table">
-      <thead>
-        <tr>
-          <th>Short URL</th>
-          <th>Long URL</th>
-          <th>Edit</th>
-          <th>Delete</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% for(let url in urls) { %>
+    <% if (JSON.stringify(urls) === '{}') { %> 
+      <div class="title">
+        <h3>No URLs Yet!</h3>
+        <a href="/urls_new"><button>Create New URL</button></a>
+      </div>
+    <% } else { %> 
+      <table class="table">
+        <thead>
           <tr>
-            <td><%= url %></td>
-            <td><%= urls[url] %></td>
-            <td><a href="/urls/<%= url %>"><button type="edit" class="btn btn-primary">Edit</button></td>
-            <td><form method="POST" action="/urls/<%= url %>/delete">
-              <button type="delete" class="btn btn-primary">Delete</button>
-            </form>
-          </td>
-            
+            <th>Short URL</th>
+            <th>Long URL</th>
+            <th>Edit</th>
+            <th>Delete</th>
           </tr>
-        <% } %>
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          <% for(let url in urls) { %>
+            <tr>
+              <td><%= url %></td>
+              <td><%= urls[url] %></td>
+              <td><a href="/urls/<%= url %>"><button type="edit" class="btn btn-primary">Edit</button></td>
+              <td><form method="POST" action="/urls/<%= url %>/delete">
+                <button type="delete" class="button-delete">Delete</button>
+              </form>
+            </td>
+              
+            </tr>
+          <% } %>
+        </tbody>
+      </table>
+    <% } %> 
   </main>
 </body>
 </html>
