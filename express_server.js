@@ -101,8 +101,12 @@ app.get("/urls/:shortURL", (req, res) => {
 // u/shortURL as path redirects to longURL
 app.get("/u/:shortURL", (req, res) => {
   //get longURL from database
-  const longURL = urlDatabase[req.params.shortURL]["longURL"];
-  res.redirect(longURL)
+  if (urlDatabase[req.params.shortURL]) {
+    const longURL = urlDatabase[req.params.shortURL]["longURL"];
+    res.redirect(longURL)
+  } else {
+    res.sendStatus(400);
+  }
 });
 
 //POSTS
@@ -195,8 +199,9 @@ app.post("/register2", (req, res) => {
     userDatabase[id] = {
       "id": id,
       "email": req.body.email,
-      "password": password
+      "password": password,
     }
+    /* console.log(userDatabase[id]); */
     //create cookie
     req.session.user_id = id; ("user_id", id);
     res.redirect("/urls")
