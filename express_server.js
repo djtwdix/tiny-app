@@ -1,5 +1,5 @@
 //require express
-const { emailDoesNotExist } = require("./helpers/auth")
+const { getUserIdByEmail } = require("./helpers/auth")
 const express = require('express');
 const app = express();
 var cookieParser = require('cookie-parser');
@@ -52,6 +52,10 @@ app.get("/register", (req, res) => {
   res.render("register");
 })
 
+app.get("/login", (req,res) => {
+  res.render("login")
+});
+
 //My urls page, renders urls_index with urlDatabase as the 
 //variable to populate the list
 app.get("/urls", (req, res) => {
@@ -62,14 +66,16 @@ app.get("/urls", (req, res) => {
 
 //Create new URL page, renders urls_new and has form to input longURL
 app.get("/urls_new", (req, res) => {
-  const templateVars = { users: userDatabase }
+  const userInfo = userDatabase[req.cookies["user_id"]]
+  const templateVars = { user: userInfo}
   res.render("urls_new", templateVars);
 })
 
 //new route is created with shortURL path, renders urls_show
 //displays longURL and shortURl (is link to longURL)
 app.get("/urls/:shortURL", (req, res) => {
-  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL], users: userDatabase }
+  const userInfo = userDatabase[req.cookies["user_id"]]
+  const templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL], user: userInfo  }
   res.render("urls_show", templateVars);
 })
 
@@ -95,13 +101,19 @@ app.post("/urls/:shortURL", (req, res) => {
 })
 
 app.post("/login", (req, res) => {
-  res.cookie("username", req.body.username)
-  res.redirect("/urls")
+  const id = getUserIdByEmail(userDatabase, req.body.email)
+  if (getUserIdByEmail(userDatabase, req.body.email) &&
+  userDatabase[id]["password"] === req.body.password) {
+      res.cookie("user_id", id);
+      res.redirect("/urls");
+    } else {
+      res.sendStatus(403);
+    }
 })
 
 app.post("/logout", (req, res) => {
-  res.clearCookie("username");
-  res.redirect("/urls")
+  res.clearCookie("user_id");
+  res.redirect("/login")
 })
 
 app.post("/urls/:shortURL/delete", (req, res) => {
@@ -110,15 +122,10 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 })
 
 app.post("/register2", (req, res) => {
-
-
-  console.log(userDatabase)
-  console.log(req.body.email)
-  console.log(emailDoesNotExist(userDatabase, req.body.email));
-  if (req.body.email === "" || req.body.password === "" || !emailDoesNotExist(userDatabase, req.body.email)) {
+  if (req.body.email === "" || req.body.password === "" || getUserIdByEmail(userDatabase, req.body.email)) {
     res.sendStatus(400);
-    res.redirect("/register")
-  } else if (emailDoesNotExist(userDatabase, req.body.email)) {
+    /* res.redirect("/register") */
+  } else if (!getUserIdByEmail(userDatabase, req.body.email)) {
     const id = generateRandomString();
     userDatabase[id] = {
       "id": id,

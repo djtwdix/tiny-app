@@ -1,15 +1,15 @@
-const emailDoesNotExist = (userData, email) => {
+const getUserIdByEmail = (userData, email) => {
   for (const user in userData) {
     const userEmail = userData[user]["email"]
     if (email === userEmail) {
-      return null
+      return user
     }
   }
-  return email
+  return null
 }
 
 module.exports = {
-  emailDoesNotExist
+  getUserIdByEmail
 }
 
 //test
@@ -27,4 +27,4 @@ module.exports = {
   }
 }
 
-console.log(emailDoesNotExist(userDatabase, "djtwd.ix@icsdsdloud.com")) */
+console.log(getUserIdByEmail(userDatabase, "djtwd.ix@icloud.com")) */
