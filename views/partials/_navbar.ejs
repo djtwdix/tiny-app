@@ -17,15 +17,15 @@
       <div class="nav-button">
         <%if (user){%>
           <form method="POST" action="/logout">
-              <label><%=user.email%></label>
-            <button type="sign-out">Sign Out</button>
+              <label class="email-display"><%=user.email%></label>
+            <button class="btn-signout" type="sign-out">Sign Out</button>
           </form>
           <%} else {%>
           <a href="../login">
             <button type="sign-in">Sign In</button>
           </a>
           <a href="../register">
-            <button type="register">Register</button>
+            <button class="btn-signout" type="register">Register</button>
           </a>
           
           <%}%>
