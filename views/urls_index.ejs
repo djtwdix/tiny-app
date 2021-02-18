@@ -15,8 +15,8 @@
       <table class="table">
         <thead>
           <tr>
-            <th>Short URL</th>
-            <th>Long URL</th>
+            <th>TINYapp URL</th>
+            <th>Destination URL</th>
             <th>Edit</th>
             <th>Delete</th>
           </tr>
@@ -26,12 +26,11 @@
             <tr>
               <td><%= url %></td>
               <td><%= urls[url] %></td>
-              <td><a href="/urls/<%= url %>"><button type="edit" class="btn btn-primary">Edit</button></td>
+              <td><a href="/urls/<%= url %>"><button type="edit" class="btn-table">Edit</button></td>
               <td><form method="POST" action="/urls/<%= url %>/delete">
-                <button type="delete" class="button-delete">Delete</button>
+                <button type="delete" class="btn-delete btn-table">Delete</button>
               </form>
             </td>
-              
             </tr>
           <% } %>
         </tbody>

@@ -3,13 +3,14 @@
 body {
   margin: 0;
   font-family: 'Fjalla One', sans-serif;
-  font-size: 30px;
+  font-size: 20px;
   background-color: #F2EFEA;
   color: #270722;
 }
 
 a {
   text-decoration: none;
+  color: #ea5757
 }
 
 a:visited {
@@ -19,6 +20,28 @@ a:visited {
 .title {
   margin: auto;
   text-align: center;
+
+}
+
+.change {
+  background-color: #270722;
+  color: #ecce8e;
+  padding-bottom: 20px;
+  font-size: 20px;
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+}
+
+.change button {
+  background-color: #ecce8e;
+  color: #270722;
+  font-size: 20px;
+ 
+}
+
+.change input {
+  font-size: 20px
 }
 
 /* NAV */
@@ -29,16 +52,17 @@ a:visited {
   flex-wrap: wrap;
   justify-content: space-between;
   align-content: center;
-  height: 60px;
   width: 100%;
 /*   position: fixed; */
   background-color: #270722;
   color: #F2EFEA;
+  padding: 10px;
+  font-size: 30px;
 }
 
 .nav-left {
   display: flex;
-  margin-left: 40px;
+  margin-left: 30px;
 }
 
 .logo {
@@ -52,19 +76,34 @@ a:visited {
   font-size: 25px;
 }
 
+.nav-links a:hover {
+  color: #ecce8e;
+}
+
+.nav-links a:active {
+  color: #ea5757;
+}
+
 .nav-container label {
   font-size: 16px;
   color: #F2EFEA;
 }
 
 .nav-button button {
-  margin-right: 20px;
+  margin-right: 40px;
+  margin-left: 15px;
   padding: 5px;
   font-size: 20px;                            
   font-family: 'Fjalla One', sans-serif;
   background-color:#ECCE8E;
   color: #270722;
   border-radius: 5px;
+}
+
+.display-url {
+  font-size: 25px;
+  text-align: center;
+  padding: 50px;
 }
 
 /* SIGN IN AND REGISTER */
@@ -94,6 +133,7 @@ a:visited {
   width: 560px;
   border-radius: 5px;
   align-items: center;
+  font-size: 30px;
 }
 
 .tagline {
@@ -133,11 +173,16 @@ input {
 }
 
 input:hover {
-  border: 1px solid #eb8a90;
+  border: 1px solid #ea5757;
 }
 
 input:active {
-  border: 1px solid #eb8a90;
+  border: 1px solid #ea5757;
+}
+
+.red-text {
+  color: #ea5757;
+  margin-top: 15px;
 }
 
 button {
@@ -149,12 +194,6 @@ button {
   color: #F2EFEA;
   border-radius: 5px;
 }
-
-/* button:active {
-  background-color:#270722;
-  border: 2px solid #eb8a90;
-  color: #eb8a90;
-} */
 
 @media screen and (max-width: 1083px) {
   .container {
@@ -175,6 +214,7 @@ button {
 
 table {
   width: 100%;
+
 }
 
 td {
@@ -183,12 +223,28 @@ td {
   /* border: 3px solid #270722; */
 }
 
+.btn-table {
+  font-size: 20px;
+}
+
+button:hover {
+  background-color: #ecce8e;
+  color: #270722;
+}
+
+button:active {
+  background-color: #270722;
+  color: #ea5757;
+}
+
 form {
   margin: 0;
 }
 
+
 th {
   /* border: 3px solid #270722; */
-  font-size: 30px;
+  font-size: 20px;
   padding: 30px;
 }
+
