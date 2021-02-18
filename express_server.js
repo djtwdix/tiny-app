@@ -201,7 +201,6 @@ app.post("/register2", (req, res) => {
       "email": req.body.email,
       "password": password,
     }
-    /* console.log(userDatabase[id]); */
     //create cookie
     req.session.user_id = id; ("user_id", id);
     res.redirect("/urls")
