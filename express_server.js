@@ -5,6 +5,7 @@ const app = express();
 const cookieSession = require("cookie-session");
 const bcrypt = require("bcrypt");
 const bodyParser = require("body-parser");
+const methodOverride = require('method-override');
 const PORT = 8080;
 
 //Generate random string
@@ -35,8 +36,13 @@ app.use(cookieSession({
 
 //public folder for local static content
 app.use(express.static("public"));
+
+app.use(methodOverride('_method'))
+
 //Sets view engine to ejs
 app.set('view engine', 'ejs');
+
+
 
 //GETS
 
@@ -88,11 +94,11 @@ app.get("/urls_new", (req, res) => {
 //new route is created with shortURL path, renders urls_show
 app.get("/urls/:shortURL", (req, res) => {
   //get userID from user_id cookie
-  const userID = req.session.user_id
+  const userID = req.session.user_id;
   //shortURL comes from 
-  const shortURL = req.params.shortURL
+  const shortURL = req.params.shortURL;
   //get user info in database from userID
-  const userInfo = userDatabase[userID]
+  const userInfo = userDatabase[userID];
   //Send back shortURL, longURL,the ID associated with URL and userInfo
   const templateVars = { shortURL: shortURL, longURL: urlDatabase[shortURL]["longURL"], urlID: urlDatabase[shortURL]["userID"], user: userInfo };
   res.render("urls_show", templateVars);
@@ -103,7 +109,7 @@ app.get("/u/:shortURL", (req, res) => {
   //get longURL from database
   if (urlDatabase[req.params.shortURL]) {
     const longURL = urlDatabase[req.params.shortURL]["longURL"];
-    res.redirect(longURL)
+    res.redirect(longURL);
   } else {
     res.sendStatus(400);
   }
@@ -116,7 +122,7 @@ app.get("/u/:shortURL", (req, res) => {
 //redirects to new shortURL path which renders urls_show
 app.post("/urls", (req, res) => {
   //Generate random string for shortURL
-  const shortURL = generateRandomString()
+  const shortURL = generateRandomString();
   //id is user_id cookie
   const id = req.session.user_id;
   //If empty string is entered redirect to same page to try again
@@ -133,11 +139,11 @@ app.post("/urls", (req, res) => {
 });
 
 //Edit longURL associated with shortURL
-app.post("/urls/:shortURL", (req, res) => {
+app.put("/urls/:shortURL", (req, res) => {
   //shortURL comes from req params
   const shortURL = req.params.shortURL;
   //id is user_id cookie
-  const id = req.session.user_id
+  const id = req.session.user_id;
   //get URLs associated with id
   const usersURLs = getURLSByID(urlDatabase, id);
   //if shortURL is from usersURLs update longURL
@@ -152,7 +158,7 @@ app.post("/urls/:shortURL", (req, res) => {
 //Login
 app.post("/login", (req, res) => {
   //get id from database with email
-  const id = getUserIdByEmail(userDatabase, req.body.email)
+  const id = getUserIdByEmail(userDatabase, req.body.email);
   //if id exists in database and passwords match redirect to urls index
   if (getUserIdByEmail(userDatabase, req.body.email) && bcrypt.compareSync(req.body.password, userDatabase[id]["password"])) {
     //set cookie 
@@ -167,11 +173,11 @@ app.post("/login", (req, res) => {
 //delete cookies at logout and redirect to login page
 app.post("/logout", (req, res) => {
   req.session = null;
-  res.redirect("/login")
+  res.redirect("/login");
 });
 
 //delete URL from database
-app.post("/urls/:shortURL/delete", (req, res) => {
+app.delete("/urls/:shortURL/delete", (req, res) => {
   //id is user_id cookie
   const id = req.session.user_id;
   //get URLs associated with id
@@ -181,7 +187,7 @@ app.post("/urls/:shortURL/delete", (req, res) => {
     delete urlDatabase[req.params.shortURL];
   }
   //If it's not the users URL redirect to urls index
-  res.redirect('/urls')
+  res.redirect('/urls');
 });
 
 //registration
@@ -194,7 +200,7 @@ app.post("/register2", (req, res) => {
     //id is a randomly generated string
     const id = generateRandomString();
     //inputted password is hashed and stored in variable
-    const password = bcrypt.hashSync(req.body.password, 10)
+    const password = bcrypt.hashSync(req.body.password, 10);
     //popuate userDatabase with information
     userDatabase[id] = {
       "id": id,
@@ -203,11 +209,11 @@ app.post("/register2", (req, res) => {
     }
     //create cookie
     req.session.user_id = id; ("user_id", id);
-    res.redirect("/urls")
+    res.redirect("/urls");
   }
 });
 
 //Server listening on PORT
 app.listen(PORT, () => {
-  console.log(`TINYapp server listening on port ${PORT}`)
+  console.log(`TINYapp server listening on port ${PORT}`);
 });

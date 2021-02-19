@@ -8,23 +8,22 @@
 <body>
   <%- include('partials/_navbar') %>
   <div class="display-url">
-      <div class="card-header"></div>
       <div class="card-body">
-        <h4 class="card-title">TinyURL for: <div class="red-text"><%= longURL %></div></h4>
-        <p class="card-text">Short URL: <a href="/u/<%= shortURL %>"><div class="red-text">
-          <%= shortURL %></a></p>
-        </div>
-        <a href="/urls"><button style="margin-top: 20px">Back To My Urls</button></a>
+        <h4 class="card-title">Destination: <div class="red-text"><%= longURL %></div></h4>
+        <p class="card-text">TinyURL: <a href="/u/<%= shortURL %>">
+        <div class="red-text"> <%= shortURL %></a></p></div>
+        <form class="title" action="/urls/<%= shortURL %>?_method=PUT" method="POST">
+          <label for="updatedLongURL">Change Destination:</label>
+          <input class="form-control" type="text" name="updatedLongURL" placeholder="new long URL" style="width: 300px; margin: 1em">
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+        
       </div>
   </div>
-  <form class="title" action="/urls/<%= shortURL %>" method="POST">
-    <div class="change">
-      <label for="updatedLongURL">Change Destination:</label>
-      <input class="form-control" type="text" name="updatedLongURL" placeholder="new long URL" style="width: 300px; margin: 1em">
-      <button type="submit" class="btn btn-primary">Submit</button>
+    <div class="change title">
+      <a href="/urls"><button style="margin-top: 20px">Back To My Urls</button></a>
       <br>
       <a href="/urls_new"><button style="margin-top: 20px">Create Another</button></a>
     </div>
-  </form>
 </body>
 </html>
