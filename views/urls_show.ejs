@@ -14,13 +14,13 @@
         <div class="red-text"> <%= shortURL %></a></p></div>
         <form class="title" action="/urls/<%= shortURL %>?_method=PUT" method="POST">
           <label for="updatedLongURL">Change Destination:</label>
-          <input class="form-control" type="text" name="updatedLongURL" placeholder="new long URL" style="width: 300px; margin: 1em">
-          <button type="submit" class="btn btn-primary">Submit</button>
+          <input class="change-destination" type="text" name="updatedLongURL" placeholder="new long URL" style="width: 300px; margin: 1em">
+          <button type="submit" class="change-submit">Submit</button>
         </form>
         
       </div>
   </div>
-    <div class="change title">
+    <div class="footer title">
       <a href="/urls"><button style="margin-top: 20px">Back To My Urls</button></a>
       <br>
       <a href="/urls_new"><button style="margin-top: 20px">Create Another</button></a>

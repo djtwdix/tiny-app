@@ -22,7 +22,7 @@ a:visited {
   text-align: center;
 }
 
-.change {
+.footer {
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -35,7 +35,7 @@ a:visited {
   bottom: 0;
 }
 
-.change button {
+.footer button {
   background-color: #ecce8e;
   color: #270722;
   font-size: 20px;
@@ -43,8 +43,16 @@ a:visited {
  
 }
 
-.change input {
-  font-size: 20px
+.footer input {
+  font-size: 20px;
+}
+
+.change-destination {
+  font-size: 20px;
+}
+
+.change-submit {
+  font-size: 23px;
 }
 
 /* NAV */
