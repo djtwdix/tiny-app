@@ -76,11 +76,19 @@ app.get("/", (req,res) => {
 
 //get login page
 app.get("/login", (req, res) => {
+  const userID = req.session.user_id;
+  if (userID) {
+    res.redirect("/urls")
+  }
   res.render("login");
 });
 
 //get register page
 app.get("/register", (req, res) => {
+  const userID = req.session.user_id;
+  if (userID) {
+    res.redirect("/urls")
+  }
   res.render("register");
 });
 
@@ -157,6 +165,9 @@ app.post("/urls", (req, res) => {
   //id is user_id cookie
   const id = req.session.user_id;
   //If empty string is entered redirect to same page to try again
+  if (!id) {
+    res.status(403).send("Please log in to create new URL")
+  }
   if (req.body.longURL === "") {
     res.redirect("urls_new")
     //If something is entered, store it in urlDatabase under the shortURL key
@@ -177,13 +188,14 @@ app.put("/urls/:shortURL", (req, res) => {
   const id = req.session.user_id;
   //get URLs associated with id
   const usersURLs = getURLSByID(urlDatabase, id);
-  console.log(urlDatabase)
   //if shortURL is from usersURLs update longURL
   if (usersURLs[shortURL]) {
     urlDatabase[shortURL]["longURL"] = req.body.updatedLongURL;
     console.log(urlDatabase)
+    res.redirect(`/urls`);
+  } else {
+    res.status(403).send("Please log in to edit URL")
   }
-  res.redirect(`/urls`);
 });
 
 //Login
