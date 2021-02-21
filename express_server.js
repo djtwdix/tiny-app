@@ -83,9 +83,6 @@ app.get("/login", (req, res) => {
 app.get("/register", (req, res) => {
   res.render("register");
 });
-app.get("/user_exists", (req, res) => {
-  res.render("user_exists");
-});
 
 //URLs index
 app.get("/urls", (req, res) => {
@@ -100,7 +97,7 @@ app.get("/urls", (req, res) => {
   if (userID) {
     res.render("urls_index", templateVars);
   } else {
-    res.sendStatus(403);
+    res.status(403).send("Please log in to access this page");
   }
 });
 
@@ -207,7 +204,7 @@ app.post("/login", (req, res) => {
 //delete cookies at logout and redirect to login page
 app.post("/logout", (req, res) => {
   req.session = null;
-  res.redirect("/urls");
+  res.redirect("/login");
 });
 
 //delete URL from database
