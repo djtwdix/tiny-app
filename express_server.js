@@ -46,6 +46,7 @@ app.set('view engine', 'ejs');
 
 //GETS
 
+
 //Mock urlDatabase lives at /urls.json
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
@@ -54,6 +55,22 @@ app.get("/urls.json", (req, res) => {
 //Mock userDatabase lives at /users.json
 app.get("/users.json", (req, res) => {
   res.json(userDatabase);
+});
+
+app.get("/", (req,res) => {
+  //get user_id cookie and access user info in database by that cookie
+  const userInfo = userDatabase[req.session.user_id];
+  //userID is the user_id cookie
+  const userID = req.session.user_id;
+  //Get URLs associated with that userID
+  const usersURLS = getURLSByID(urlDatabase, userID)
+  //User urls and user info sent back for populating site with user specific content
+  const templateVars = { urls: usersURLS, user: userInfo };
+  if (userID) {
+    res.render("urls_new", templateVars)
+  } else {
+    res.render("login")
+  }
 });
 
 //get login page
