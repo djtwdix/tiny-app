@@ -63,7 +63,6 @@ app.get("/", (req,res) => {
   const usersURLS = getURLSByID(urlDatabase, userID)
   //User urls and user info sent back for populating site with user specific content
   const templateVars = { urls: usersURLS, user: userInfo };
-  console.log(userID);
   if (userID) {
     res.render("urls_index", templateVars)
   } else {
@@ -125,7 +124,6 @@ app.get("/urls/:shortURL", (req, res) => {
   const userID = req.session.user_id;
   //shortURL comes from 
   const shortURL = req.params.shortURL;
-  console.log("userID", userID, "shortURL ID: ", urlDatabase[shortURL] )
   if (!urlDatabase[shortURL]) {
     res.status(400).send("This URL does not exist");
   }
@@ -188,7 +186,6 @@ app.put("/urls/:shortURL", (req, res) => {
   //if shortURL is from usersURLs update longURL
   if (usersURLs[shortURL]) {
     urlDatabase[shortURL]["longURL"] = req.body.updatedLongURL;
-    console.log(urlDatabase)
     res.redirect(`/urls`);
   } else {
     res.status(403).send("Please log in to edit URL")
