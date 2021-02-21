@@ -207,7 +207,7 @@ app.post("/login", (req, res) => {
 //delete cookies at logout and redirect to login page
 app.post("/logout", (req, res) => {
   req.session = null;
-  res.redirect("/login");
+  res.redirect("/urls");
 });
 
 //delete URL from database
@@ -219,16 +219,22 @@ app.delete("/urls/:shortURL/delete", (req, res) => {
   //if users URLs contains the shortURL set for deletion, execute deletion
   if (usersURLs[req.params.shortURL]) {
     delete urlDatabase[req.params.shortURL];
+    res.redirect('/urls');
+  } else {
+    //If it's not the users URL display error status 400 and relevant message
+    res.status(403).send("You do not have permission to delete this URL")
   }
-  //If it's not the users URL redirect to urls index
-  res.redirect('/urls');
 });
 
 //registration
 app.post("/register2", (req, res) => {
-  //if empty strings entered or user is already in database, return status code 400
-  if (req.body.email === "" || req.body.password === "" || getUserIdByEmail(userDatabase, req.body.email)) {
-    res.sendStatus(400);
+  //If user is already in database send status code 400 and relevant message
+  if (getUserIdByEmail(userDatabase, req.body.email)) {
+    res.status(400).send("User already exists, please log in");
+  }
+  //if empty strings entered, return status code 400 and relevant message
+  if (req.body.email === "" || req.body.password === "") {
+    res.status(400).send("Please enter a valid e-mail and password");
     //otherwise allow the user to register
   } else if (!getUserIdByEmail(userDatabase, req.body.email)) {
     //id is a randomly generated string
