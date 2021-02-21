@@ -12,7 +12,7 @@
         <h4 class="card-title">Destination: <div class="red-text"><%= longURL %></div></h4>
         <p class="card-text">TINYurl: <a href="/u/<%= shortURL %>">
         <div class="red-text"> <%= shortURL %></a></p></div>
-        <form class="title" action="/urls/<%= shortURL %>?_method=PUT" method="POST">
+        <form class="title" method="POST" action="/urls/<%= shortURL %>?_method=PUT">
           <label for="updatedLongURL">Change Destination:</label>
           <input class="change-destination" type="text" name="updatedLongURL" placeholder="new long URL" style="width: 300px; margin: 1em">
           <button type="submit" class="change-submit">Submit</button>

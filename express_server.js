@@ -97,7 +97,11 @@ app.get("/urls", (req, res) => {
   const usersURLS = getURLSByID(urlDatabase, userID)
   //User urls and user info sent back for populating site with user specific content
   const templateVars = { urls: usersURLS, user: userInfo };
-  res.render("urls_index", templateVars);
+  if (userID) {
+    res.render("urls_index", templateVars);
+  } else {
+    res.sendStatus(403);
+  }
 });
 
 //create new URL page
@@ -106,7 +110,11 @@ app.get("/urls_new", (req, res) => {
   const userInfo = userDatabase[req.session.user_id];
   //User info sent back for populating site with user specific content
   const templateVars = { user: userInfo };
-  res.render("urls_new", templateVars);
+  if (req.session.user_id) {
+    res.render("urls_new", templateVars);
+  } else {
+    res.render("login");
+  }
 });
 
 //new route is created with shortURL path, renders urls_show
@@ -115,11 +123,19 @@ app.get("/urls/:shortURL", (req, res) => {
   const userID = req.session.user_id;
   //shortURL comes from 
   const shortURL = req.params.shortURL;
-  //get user info in database from userID
-  const userInfo = userDatabase[userID];
-  //Send back shortURL, longURL,the ID associated with URL and userInfo
-  const templateVars = { shortURL: shortURL, longURL: urlDatabase[shortURL]["longURL"], urlID: urlDatabase[shortURL]["userID"], user: userInfo };
-  res.render("urls_show", templateVars);
+  console.log("userID", userID, "shortURL ID: ", urlDatabase[shortURL] )
+  if (!urlDatabase[shortURL]) {
+    res.status(400).send("This URL does not exist");
+  }
+  if (userID && urlDatabase[shortURL] && urlDatabase[shortURL]["userID"] === userID) {
+    //get user info in database from userID
+    const userInfo = userDatabase[userID];
+    //Send back shortURL, longURL,the ID associated with URL and userInfo
+    const templateVars = { shortURL: shortURL, longURL: urlDatabase[shortURL]["longURL"], urlID: urlDatabase[shortURL]["userID"], user: userInfo };
+    res.render("urls_show", templateVars);
+  } else if (urlDatabase[shortURL]["userID"] !== userID) {
+    res.status(403).send("You do not have permission to access this URL")
+  }
 });
 
 // u/shortURL as path redirects to longURL
@@ -129,7 +145,7 @@ app.get("/u/:shortURL", (req, res) => {
     const longURL = urlDatabase[req.params.shortURL]["longURL"];
     res.redirect(longURL);
   } else {
-    res.sendStatus(400);
+    res.status(400).send("This URL does not exist");
   }
 });
 
@@ -164,13 +180,13 @@ app.put("/urls/:shortURL", (req, res) => {
   const id = req.session.user_id;
   //get URLs associated with id
   const usersURLs = getURLSByID(urlDatabase, id);
+  console.log(urlDatabase)
   //if shortURL is from usersURLs update longURL
   if (usersURLs[shortURL]) {
-    urlDatabase[shortURL] = {
-      "longURL": req.body.updatedLongURL,
-    }
+    urlDatabase[shortURL]["longURL"] = req.body.updatedLongURL;
+    console.log(urlDatabase)
   }
-  res.redirect(`/urls/${shortURL}`);
+  res.redirect(`/urls`);
 });
 
 //Login
@@ -184,7 +200,7 @@ app.post("/login", (req, res) => {
     res.redirect("/urls");
     //or else send status 403
   } else {
-    res.sendStatus(403);
+    res.status(403).send("E-mail or password are incorrect or user does not exist");
   }
 });
 
