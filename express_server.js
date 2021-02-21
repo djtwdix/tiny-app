@@ -14,14 +14,11 @@ const generateRandomString = () => {
   return randomString;
 };
 
-//mock database
-const urlDatabase = {
+//mock url database
+const urlDatabase = {};
 
-};
-
-const userDatabase = {
-
-};
+//mock user database
+const userDatabase = {};
 
 //USE
 
