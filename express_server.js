@@ -66,8 +66,9 @@ app.get("/", (req,res) => {
   const usersURLS = getURLSByID(urlDatabase, userID)
   //User urls and user info sent back for populating site with user specific content
   const templateVars = { urls: usersURLS, user: userInfo };
+  console.log(userID);
   if (userID) {
-    res.render("urls_new", templateVars)
+    res.render("urls_index", templateVars)
   } else {
     res.render("login")
   }
